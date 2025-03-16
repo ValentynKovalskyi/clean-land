@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+/* 
+.ibm-plex-sans-<uniquifier> {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: <weight>;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+  } */
+
+$color-1: #041A26;
+$color-2: #226E98;
+$color-3: #405662;
+$color-4: #C9E3F1;
+$color-5: #FFFFFF;
+$color-6: #F10000;
+
+$color-7: #005570;
+$color-8: #030015;
+$color-9: #001E27;
+
+$primary: rgb(85, 177, 96);
+$white: #e1e1e1;
+$font-primary: #222; 
+$gray: #888;
+$main-bg: linear-gradient(90deg, rgb(129, 162, 177) 0%, rgba(142,176,146,1) 50%, rgba(144,170,148,1) 100%);
+
+$screen-xxs: 400px;
+$screen-xs: 600px;
+$screen-sm: 960px;
+$screen-md: 1280px;
+$screen-lg: 1920px;
+
+@mixin navigation-flex {
+    height: 5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    @include shadow;
+}
+
+@mixin centered-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin shadow($spread: 2px) {
+    filter: drop-shadow(0px 1px $spread black);
+}
