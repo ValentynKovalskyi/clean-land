@@ -25,10 +25,10 @@ import { storeToRefs } from 'pinia';
     }).addTo(map);
     
     let ponds = []
-    await get('http://192.168.234.128:5000/api/Forest');
+/*     await get('http://192.168.234.128:5000/api/Forest');
     ponds = ponds.concat(responseData.value);
     await get('http://192.168.234.128:5000/api/Ponds');
-    ponds = ponds.concat(responseData.value);
+    ponds = ponds.concat(responseData.value); */
 
     /* if(true) {
       const objects = mockData.map((forest) => {

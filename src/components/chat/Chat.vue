@@ -20,7 +20,7 @@
         </v-card>
         </template>
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn v-show="false" class="ai-chat-button" rounded="xl" size="x-large" v-bind="activatorProps">
+            <v-btn class="ai-chat-button" rounded="xl" size="x-large" v-bind="activatorProps">
                 <v-icon icon="mdi-help-circle-outline">
                 </v-icon>
             </v-btn>
@@ -36,13 +36,13 @@ const dialog = ref(false);
 
 //const ws =WebSocket('ws://')
 // Підключення до сервера WebSocket
-const socket = new WebSocket('ws://192.168.47.115:8765');
+//const socket = new WebSocket('ws://192.168.47.115:8765');
 
-socket.onopen = () => {
+/* socket.onopen = () => {
     console.log('Підключення до сервера WebSocket встановлено!');
 };
 
-
+ */
 </script>
 <style scoped lang="scss">
 .custom-dialog {
