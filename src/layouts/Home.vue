@@ -8,8 +8,14 @@
 
 <script setup>
 import Chat from '@/components/chat/Chat.vue';
+import { useObjects } from '@/stores/objectStore';
 import HomeHeader from '@components/home/HomeHeader.vue';
+import { onMounted } from 'vue';
 
+const objectsStore = useObjects();
+onMounted(async () => {
+    await objectsStore.fetchData();
+})
 </script>
 <style lang="scss">
 .main {

@@ -5,24 +5,22 @@
   import { onMounted, ref } from 'vue';
   import L from 'leaflet';
   import 'leaflet/dist/leaflet.css';
-  import { useObjectDetails } from '@/stores/objectDetailsState';
+  import { useObjects } from '@/stores/objectStore.js';
   import { useFetch } from '@/composables/useFetch';
   import mockData from "@/api/mock/forests.mock.json"
-  import { useSearchStore } from '@/stores/useSearchStore';
-import { storeToRefs } from 'pinia';
+  import { storeToRefs } from 'pinia';
 
   const mapContainer = ref(null);
-  const { toggleShow, showObject, setObjects, setMap } = useObjectDetails()
+  const { toggleShow, showObject } = useObjects()
+  const { map } = storeToRefs(useObjects());
   const { get, response, responseData } = useFetch()
-  const searchStore = useSearchStore();
-  const { searchValue } = storeToRefs(searchStore);
 
   onMounted(async () => {
-    const map = L.map(mapContainer.value, { zoomControl: false }).setView([49.234, 28.445], 10);
-    setMap(map);
+    const createdMap = L.map(mapContainer.value, { zoomControl: false }).setView([49.234, 28.445], 10);
+    map.value = createdMap;
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+    }).addTo(createdMap);
     
     let ponds = []
 /*     await get('http://192.168.234.128:5000/api/Forest');
@@ -42,23 +40,6 @@ import { storeToRefs } from 'pinia';
       })
       return
     } */
-
-    const objects = ponds.map((pond) => {
-    const circle = L.circle([pond.xLocation, pond.yLocation], {
-    color: 'red',
-    fillColor: '#FF0000',
-    fillOpacity: 0.3,
-    radius: 500
-    }).addTo(map)
-    circle.on('click', () => showObject(pond))
-    return {
-      object: pond,
-      circle
-    }
-  })
-
-setObjects(objects);
-
 
 
 

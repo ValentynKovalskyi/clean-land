@@ -1,8 +1,7 @@
 <template>
     <div class="map-header" :class="{'width-reduced': show}">
         <v-text-field
-        v-model="searchValue"
-        @update:model-value="objectDetails.search(searchValue)"
+        v-model="objectsStore.searchValue"
         class="search-field"
         variant="solo-filled"placeholder="Search"
         density="compact"
@@ -44,7 +43,7 @@
                 </p>
                 <h2>{{ object.name }}</h2>
             </div>
-            <v-btn variant="plain" @click="objectDetails.toggleShow()">
+            <v-btn variant="plain" @click="objectsStore.toggleShow()">
                 <v-icon icon="mdi-close"></v-icon>
             </v-btn>
         </v-card-title>
@@ -67,21 +66,17 @@
 <script setup>
 import MapView from '@/components/home/MapView.vue';
 import ProblemDialog from '@/components/home/ProblemDialog.vue';
-import { useObjectDetails } from '@/stores/objectDetailsState';
-import { useSearchStore } from '@/stores/useSearchStore';
+import { useObjects } from '@/stores/objectStore.js';
 import { storeToRefs } from 'pinia';
 import { onMounted, computed, ref } from 'vue';
 
-const objectDetails = useObjectDetails();
-const searchValue = ref('')
-const { show, object, objects, } = storeToRefs(objectDetails);
-const searchStore = useSearchStore();
+const objectsStore = useObjects();
+const { show, object, objects } = storeToRefs(objectsStore);
 const filter = ref()
 function getGoogleMapsRef () {
     return `https://google.com/maps/place/${object.value.xLocation + ',' + object.value.yLocation}`
 }
 const issuesText = computed(() => {
-    console.log(object.value)
     if(object.value.issues) {
         return object.value.issues.map((i) => {
             return i.description + ' ' + new Date(i.date).toLocaleDateString();
@@ -97,9 +92,6 @@ function handleUpdateFilter() {
         objectDetails.showPonds();
     }
 }
-onMounted(() => {
-    //searchStore.search();
-})
 </script>
 <style scoped lang="scss">
 .v-card {

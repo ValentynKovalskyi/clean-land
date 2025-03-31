@@ -23,13 +23,13 @@
 </template>
 <script setup>
 import { useFetch } from '@/composables/useFetch';
-import { useObjectDetails } from '@/stores/objectDetailsState';
+import { useObjects } from '@/stores/objectStore.js';
 import { validations } from '@/utils/constants/validations.constants';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 
-const objectDetails = useObjectDetails();
-const { show, object, objects } = storeToRefs(objectDetails);
+const objectsStore = useObjects();
+const { show, object, objects } = storeToRefs(objectsStore);
 const description = ref('');
 const dialog = ref(false);
 const form = ref(null);
