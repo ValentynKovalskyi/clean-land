@@ -7,7 +7,6 @@
   import 'leaflet/dist/leaflet.css';
   import { useObjects } from '@/stores/objectStore.js';
   import { useFetch } from '@/composables/useFetch';
-  import mockData from "@/api/mock/forests.mock.json"
   import { storeToRefs } from 'pinia';
 
   const mapContainer = ref(null);

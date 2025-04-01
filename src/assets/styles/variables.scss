@@ -53,5 +53,5 @@ $screen-lg: 1920px;
 }
 
 @mixin transition($type: all, $time: 0.3s) {
-    transition: $type $time ease-in-out;
+    transition: $type $time ease-in-out 0.1s;
 }

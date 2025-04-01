@@ -1,6 +1,8 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import { reactive, ref, watchEffect } from "vue";
+import mock from '@/api/mock/mock.json'
+import { Ecosystem } from "@/utils/constants/ecosystem.contants";
 
 export const useObjects = defineStore('objectDetails', () => {
     const map = ref(null);
@@ -9,27 +11,35 @@ export const useObjects = defineStore('objectDetails', () => {
     const isForests = ref(true);
     const isPonds = ref(true);
     const searchValue = ref('');
+    const filters = ref([])
     const rawForests = ref([]);
     const rawPonds = ref([]);
-    const objects = ref([]); // 🔥 Тепер це звичайний ref, який будемо оновлювати вручну
+    const objects = ref([]); 
 
     async function fetchData() {
         if (!rawForests.value.length) {
           const { data } = await axios.get("http://localhost:5000/api/Forest");
           rawForests.value = data;
+          rawForests.value.push(mock[0])
         }
-      
+
         if (!rawPonds.value.length) {
           const { data } = await axios.get("http://localhost:5000/api/Ponds");
           rawPonds.value = data;
+          rawPonds.value.push(mock[1]);
         }
     }
 
     function updateObjects() {
         let result = [];
+        console.log(filters.value);
+        if (filters.value.includes(Ecosystem.FOREST)) result.push(...rawForests.value);
+        if (filters.value.includes(Ecosystem.POND)) result.push(...rawPonds.value);
 
-        if (isForests.value) result = result.concat(rawForests.value);
-        if (isPonds.value) result = result.concat(rawPonds.value);
+        if(!filters.value.length) {
+            result.push(...rawForests.value);
+            result.push(...rawPonds.value);
+        }
 
         if (searchValue.value) {
             result = result.filter(item =>
@@ -67,6 +77,7 @@ export const useObjects = defineStore('objectDetails', () => {
     }
 
     function showObject(obj) {
+        show.value = false;
         object.value = obj;
         show.value = true;
     }
@@ -86,6 +97,7 @@ export const useObjects = defineStore('objectDetails', () => {
         isForests,
         isPonds,
         searchValue,
+        filters,
         objects,
         fetchData,
         toggleShow,
