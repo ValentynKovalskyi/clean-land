@@ -1,13 +1,23 @@
 <template>
     <div class="map-header" :class="{'width-reduced': show}">
-        <v-text-field
-        v-model="objectsStore.searchValue"
-        class="search-field"
-        variant="solo-filled"placeholder="Search"
-        density="compact"
-        rounded="xl"
-        prepend-inner-icon="mdi-magnify"
-        hide-details/>
+        <div class="search-field">
+            <v-text-field
+                v-model="objectsStore.searchValue"
+                variant="solo-filled"
+                placeholder="Search"
+                density="compact"
+                rounded="xl"
+                prepend-inner-icon="mdi-magnify"
+                hide-details />
+                <v-menu v-show="objectsStore.searchSuggests.length > 3" v-model="suggestsMenu" activator="parent" class="suggests">
+                    <v-list>
+                        <v-list-item v-for="item in objectsStore.searchSuggests" class="suggests__item" @click="objectsStore.showObject(item)">
+                            {{ [ item.name, item.district ].join(', ')}}
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+        </div>
+
 <!--         <v-select 
         label="Критичність" 
         clearable 
@@ -37,16 +47,14 @@ import MapView from '@/components/home/MapView.vue';
 import SideDetails from '@/components/home/SideDetails.vue';
 import { useObjects } from '@/stores/objectStore.js';
 import { Ecosystem } from '@/utils/constants/ecosystem.contants';
+import { searchFilter } from '@/utils/filters/search.filter';
 import { storeToRefs } from 'pinia';
 import { onMounted, computed, ref } from 'vue';
 
 const objectsStore = useObjects();
 const { show } = storeToRefs(objectsStore);
 
-const filter = computed({
-    get: () => { return null }
-});
-
+const suggestsMenu = ref(true)
 </script>
 <style scoped lang="scss">
 
@@ -62,10 +70,24 @@ const filter = computed({
     gap: 1em;
     padding: 0 2em 0 2em;
     @include transition(width);
-    .search-field.v-text-field {
+    .search-field {
         width: 50%;
+        height: 2em;
+        position: relative;
     }
 }
+
+.suggests {
+    position: absolute;
+    width: 100%;
+    &__item {
+        cursor: pointer;
+        &:hover {
+        text-decoration: underline;
+    }
+    }
+}
+
 .width-reduced {
     width: 60vw;
     gap: 1em;

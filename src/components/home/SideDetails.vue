@@ -10,9 +10,9 @@
                 v-model="criticity"
                 size="small"
                 density="compact"
-                empty-icon="mdi-circle-outline"
+                empty-icon="mdi-circle"
+                color="#aaa"
                 full-icon="mdi-circle"
-                half-increments
                 :active-color="criticityColor"
                 :title="object.criticalityScore"
                 readonly>

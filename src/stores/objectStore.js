@@ -1,6 +1,6 @@
 import axios from "axios";
 import { defineStore } from "pinia";
-import { reactive, ref, watchEffect } from "vue";
+import { computed, reactive, ref, watchEffect } from "vue";
 import mock from '@/api/mock/mock.json'
 import { Ecosystem } from "@/utils/constants/ecosystem.contants";
 
@@ -41,12 +41,6 @@ export const useObjects = defineStore('objectDetails', () => {
             result.push(...rawPonds.value);
         }
 
-        if (searchValue.value) {
-            result = result.filter(item =>
-                item.name.toLowerCase().includes(searchValue.value.toLowerCase())
-            );
-        }
-
         objects.value = result;
         renderObjectsOnMap();
     }
@@ -58,7 +52,7 @@ export const useObjects = defineStore('objectDetails', () => {
 
         clearMap();
 
-        objects.value.forEach(obj => {
+        objects.value = objects.value.map(obj => {
             const marker = L.circle([obj.xLocation, obj.yLocation], {
                 radius: 500,
                 color: "green",
@@ -69,9 +63,16 @@ export const useObjects = defineStore('objectDetails', () => {
             marker.addTo(map.value).bindPopup(obj.name);
 
             marker.on('click', () => showObject(obj))
+            obj.mapMarker = marker;
+            return obj;
         });
     }
-    
+    const searchSuggests = computed(() => {
+        console.log("as")
+            return objects.value
+            .filter(item => item.name.toLowerCase().includes(searchValue.value.toLowerCase()))
+    })
+
     function toggleShow() {
         show.value = !show.value;
     }
@@ -79,6 +80,8 @@ export const useObjects = defineStore('objectDetails', () => {
     function showObject(obj) {
         show.value = false;
         object.value = obj;
+        console.log(object.value)
+        map.value.setView(object.value.mapMarker.getLatLng(), 12);
         show.value = true;
     }
 
@@ -99,6 +102,7 @@ export const useObjects = defineStore('objectDetails', () => {
         searchValue,
         filters,
         objects,
+        searchSuggests,
         fetchData,
         toggleShow,
         showObject,
