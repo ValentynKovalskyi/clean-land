@@ -80,8 +80,11 @@ export const useObjects = defineStore('objectDetails', () => {
     function showObject(obj) {
         show.value = false;
         object.value = obj;
-        console.log(object.value)
-        map.value.setView(object.value.mapMarker.getLatLng(), 12);
+        map.value.flyTo(object.value.mapMarker.getLatLng(), 12, {
+            animate: true,
+            duration: 1,
+            easeLinearity: 0.5,
+        });
         show.value = true;
     }
 

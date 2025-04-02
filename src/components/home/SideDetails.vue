@@ -25,25 +25,22 @@
             </h1>
                 <span class="details__coords">
                     <v-icon icon="mdi-map-marker-outline"/>
-                    <a :href="getGoogleMapsRef()" target="_blank">
+                    <a :href="getGoogleMapsHref(object.xLocation, object.y)" target="_blank">
                         {{ object.xLocation + ', ' + object.yLocation }}
                     </a>
                 </span>
-                <!--  no date = no view <span class="details__date">
-                    <v-icon icon="mdi-calendar-month-outline"/>
-                    <a :href="getGoogleMapsRef()" target="_blank">
-                        {{ object.xLocation + ', ' + object.yLocation }}
-                    </a>
-                </span> -->
             <div class="details__actions">
                 <v-btn class="donate" variant="outlined" rounded="xl">Задонатити</v-btn>
                 <ProblemDialog/>
             </div>
-            <v-expansion-panels class="details__problems">
-                <v-expansion-panel title="Потенційні проблеми" :text="'issuesText'"
-                ></v-expansion-panel>
-            </v-expansion-panels>
-            <div class="details__tables">
+            <div class="details__problems">
+                Потенційні проблеми
+            </div>
+            <div class="details__table">
+                <span class="details__table__title">Відомості про об'єкт</span>
+                <v-data-table class="details__table__datatable" :items="tableData" hide-default-header hide-default-footer>
+                    
+                </v-data-table>
             </div>
         </template>
     </v-card>
@@ -51,18 +48,26 @@
 <script setup>
 import ProblemDialog from '@/components/home/ProblemDialog.vue';
 import { useObjects } from '@/stores/objectStore';
+import { getGoogleMapsHref } from '@/utils/helpers/getGoogleMapHref';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const objectsStore = useObjects();
+const { t } = useI18n();
 const { show, object } = storeToRefs(objectsStore);
 // object criticity
 const criticalityMax = ref(6);
-function getGoogleMapsRef () {
-    return object.value ? `https://google.com/maps/place/${object.value.xLocation + ',' + object.value.yLocation}`: ''
-}
 const criticity = computed(() => Math.round(object.value.criticalityScore / 10 * criticalityMax.value))
-
+const tableData = computed(() => {
+    return Object.entries(object.value)
+        .map((entry) => ({ property: t('Object.' + entry[0]), value: entry[1]}))
+})
+const headers = [
+    { title: "Property", align: "center", sortable: false, key: "property" },
+    { title: "Value", align: "center", sortable: false, key: "value"},
+]
+console.log(tableData)
 const criticityColor = computed(() => {
     if(criticity.value > 4) return "red";
     else if(criticity.value > 2) return "yellow";
@@ -129,6 +134,21 @@ const criticityColor = computed(() => {
     &__problems {
         grid-row: 5;
         grid-column: span 2;
+    }
+    &__table {
+        grid-row: 6;
+        grid-column: span 2;
+        &__title {
+            display: block;
+            width: 100%;
+            text-align: center;
+            border: $color-3 1px solid;
+            padding: 0.5em;
+        }
+        &__datatable {
+            max-height: min-content;
+            overflow-y: visible;
+        }
     }
 
 

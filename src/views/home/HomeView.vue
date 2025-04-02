@@ -1,6 +1,6 @@
 <template>
-    <div class="map-header" :class="{'width-reduced': show}">
-        <div class="search-field">
+    <div class="map-header" :class="{'map-header--sidebar': show}">
+        <div class="search">
             <v-text-field
                 v-model="objectsStore.searchValue"
                 variant="solo-filled"
@@ -9,7 +9,7 @@
                 rounded="xl"
                 prepend-inner-icon="mdi-magnify"
                 hide-details />
-                <v-menu v-show="objectsStore.searchSuggests.length > 3" v-model="suggestsMenu" activator="parent" class="suggests">
+                <v-menu v-show="objectsStore.searchSuggests.length > 3" v-model="suggestsMenu" activator="parent" class="search__suggests">
                     <v-list>
                         <v-list-item v-for="item in objectsStore.searchSuggests" class="suggests__item" @click="objectsStore.showObject(item)">
                             {{ [ item.name, item.district ].join(', ')}}
@@ -17,15 +17,6 @@
                     </v-list>
                 </v-menu>
         </div>
-
-<!--         <v-select 
-        label="Критичність" 
-        clearable 
-        variant="solo-filled"
-        density="compact"
-        rounded="xl"
-        hide-details
-        /> -->
         <v-select
         v-model="objectsStore.filters"
         multiple
@@ -38,11 +29,16 @@
         hide-details
         :items="Object.values(Ecosystem)"
         />
+        <v-btn @click="toggleView" variant="solo-filled" color="white" rounded="xl" class="toggleButton">
+            {{ isListView ? $t('MapView'): $t('ListView')}}
+        </v-btn>
     </div>
-        <MapView/>
-        <SideDetails />
+    <ListView v-if="isListView"/>
+    <MapView v-else/>
+    <SideDetails />
 </template>
 <script setup>
+import ListView from '@/components/home/ListView.vue';
 import MapView from '@/components/home/MapView.vue';
 import SideDetails from '@/components/home/SideDetails.vue';
 import { useObjects } from '@/stores/objectStore.js';
@@ -53,30 +49,60 @@ import { onMounted, computed, ref } from 'vue';
 
 const objectsStore = useObjects();
 const { show } = storeToRefs(objectsStore);
-
-const suggestsMenu = ref(true)
+const isListView = ref(false)
+function toggleView() {
+    isListView.value = !isListView.value;
+}
+const suggestsMenu = ref(false)
 </script>
 <style scoped lang="scss">
 
 .map-header {
     @include centered-flex;
-    justify-items: start;
+    justify-items: center;
     position: absolute;
     height: 5em;
     top: 5em;
-    width: 100vw;
-    right: 0;
+    width: 60vw;
+    right: 50%;
+    transform: translateX(50%);
     z-index: 2;
     gap: 1em;
     padding: 0 2em 0 2em;
-    @include transition(width);
-    .search-field {
-        width: 50%;
-        height: 2em;
-        position: relative;
+    @include transition(all);
+    & > * {
+        @include shadow(3px);
+        &:nth-child(1) {
+            flex-grow: 4;
+        }
+        &:nth-child(2) {
+            flex-grow: 2;
+        }
+        &:nth-child(3) {
+            flex-grow: 1;
+        }
+    }
+    &--sidebar {
+        right: 0;
+        transform: translateX(0);
     }
 }
 
+.search {
+    width: 50%;
+    position: relative;
+    &__suggests {
+    position: absolute;
+    width: 100%;
+    flex-grow: 2;
+    &__item {
+        cursor: pointer;
+        &:hover {
+        text-decoration: underline;
+    }
+    }
+}   
+}
 .suggests {
     position: absolute;
     width: 100%;
@@ -88,8 +114,7 @@ const suggestsMenu = ref(true)
     }
 }
 
-.width-reduced {
-    width: 60vw;
-    gap: 1em;
+.toggleButton {
+    background-color: green;
 }
 </style>
