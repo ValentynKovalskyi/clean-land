@@ -9,14 +9,14 @@ export const RouteNames =  {
     ABOUT: "about",
     HOWTOHELP: "howtohelp",
     LOGIN: 'login',
+    VACANCIES: 'vacancies'
 }
 
 export const routes = [
     {
-        name: RouteNames.MAIN,
         path: "/", component: Home,
         children: [
-            { name: RouteNames.MAPVIEW, path: '', component: HomeView },
+            { name: RouteNames.MAIN, path: '', component: HomeView },
             { name: RouteNames.ABOUT, path: '/about', component: About},
             { name: RouteNames.HOWTOHELP, path: '/howtohelp', component: HowToHelp},
             { name: RouteNames.LOGIN, path: '/login', component: Login},
