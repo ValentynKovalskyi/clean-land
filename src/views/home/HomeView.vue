@@ -1,6 +1,6 @@
 <template>
     <div class="map-header" :class="{'map-header--sidebar': show}">
-        <div class="search">
+        <div class="mapsearch">
             <v-text-field
                 v-model="objectsStore.searchValue"
                 variant="solo-filled"
@@ -9,10 +9,14 @@
                 rounded="xl"
                 prepend-inner-icon="mdi-magnify"
                 hide-details />
-                <v-menu v-show="objectsStore.searchSuggests.length > 3" v-model="suggestsMenu" activator="parent" class="search__suggests">
+                <v-menu v-show="objectsStore.searchSuggests.length > 3" v-model="suggestsMenu" activator="parent" class="mapsearch__suggests">
                     <v-list>
-                        <v-list-item v-for="item in objectsStore.searchSuggests" class="suggests__item" @click="objectsStore.showObject(item)">
-                            {{ [ item.name, item.district ].join(', ')}}
+                        <v-list-item v-for="item in objectsStore.searchSuggests" 
+                        class="suggests__item" 
+                        @click="objectsStore.showObject(item)" 
+                        :key="item.id"
+                        >
+                        <span v-html="getWithSearchHighlight([ item.name, item.district ].join(', '))"></span>
                         </v-list-item>
                     </v-list>
                 </v-menu>
@@ -48,14 +52,19 @@ import { storeToRefs } from 'pinia';
 import { onMounted, computed, ref } from 'vue';
 
 const objectsStore = useObjects();
-const { show } = storeToRefs(objectsStore);
+const { show, searchValue } = storeToRefs(objectsStore);
 const isListView = ref(false)
 function toggleView() {
     isListView.value = !isListView.value;
 }
 const suggestsMenu = ref(false)
+function getWithSearchHighlight(str) {
+    if(!searchValue.value) return str;
+    const regex = new RegExp(`(${searchValue.value})`, "gi");
+    return str.replace(regex, '<span class="mapsearch__suggests__item--highlight">$1</span>');
+}
 </script>
-<style scoped lang="scss">
+<style lang="scss">
 
 .map-header {
     @include centered-flex;
@@ -88,31 +97,25 @@ const suggestsMenu = ref(false)
     }
 }
 
-.search {
+.mapsearch {
     width: 50%;
     position: relative;
     &__suggests {
     position: absolute;
     width: 100%;
-    flex-grow: 2;
-    &__item {
-        cursor: pointer;
-        &:hover {
-        text-decoration: underline;
+        &__item {
+            cursor: pointer;
+            &:hover {
+                text-decoration: underline;
+            }
+        &--highlight {
+            background-color: $color-4;
+            font-weight: bolder;
+        }
     }
-    }
+}
 }   
-}
-.suggests {
-    position: absolute;
-    width: 100%;
-    &__item {
-        cursor: pointer;
-        &:hover {
-        text-decoration: underline;
-    }
-    }
-}
+
 
 .toggleButton {
     background-color: green;

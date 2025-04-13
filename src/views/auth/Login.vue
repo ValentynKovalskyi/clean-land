@@ -20,15 +20,17 @@
 </template>
 <script setup>
 import { useFetch } from '@/composables/useFetch';
+import { useUserStore } from '@/stores/userStore';
 import { validations } from '@constants/validations.constants';
+import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+const userStore = useUserStore();
 const isValidForm = ref(true);
 const email = ref('');
 const password = ref('');
 const isSendingForm = ref(false);
-const { post, response, responseData } = useFetch();
 const router = useRouter()
 
 async function handleLogin() {
@@ -38,11 +40,11 @@ async function handleLogin() {
             userName: email.value,
             password: password.value,
         }
-        await post('http://192.168.234.128:5000/api/Users/login', loginData, true)
-        console.log(response)
-        console.log(responseData)
-        console.log(response)
-        if(response.value.ok) router.push('/');
+        const response = await axios.post('http://localhost:5000/api/Users/login', loginData)
+        if(response.status === 200) {
+            userStore.setIsAdmin(true)
+            router.push('/');
+        }
         isSendingForm.value = false;
     }
 }

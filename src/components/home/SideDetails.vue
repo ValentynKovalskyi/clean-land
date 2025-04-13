@@ -4,8 +4,8 @@
             <h2 class="details__name">
                 {{ object.name }}
             </h2>
-            <v-rating
-                class="details__criticity"
+            <div class="details__criticity" v-tooltip:top="object.criticalityScore + '/10'">
+                <v-rating
                 :length="criticalityMax"
                 v-model="criticity"
                 size="small"
@@ -15,8 +15,11 @@
                 full-icon="mdi-circle"
                 :active-color="criticityColor"
                 :title="object.criticalityScore"
-                readonly>
+                readonly
+                >
             </v-rating>
+            </div>
+            
             <v-btn variant="plain" @click="objectsStore.toggleShow()" size="xs" density="compact">
                 <v-icon icon="mdi-close"></v-icon>
             </v-btn>

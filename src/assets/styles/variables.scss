@@ -32,16 +32,6 @@ $screen-sm: 960px;
 $screen-md: 1280px;
 $screen-lg: 1920px;
 
-@mixin navigation-flex {
-    height: 5rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1em;
-    @include shadow;
-}
-
 @mixin centered-flex {
     display: flex;
     justify-content: center;
@@ -54,4 +44,10 @@ $screen-lg: 1920px;
 
 @mixin transition($type: all, $time: 0.3s) {
     transition: $type $time ease-in-out 0.1s;
+}
+
+@mixin text-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }

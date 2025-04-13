@@ -96,6 +96,14 @@ export const useObjects = defineStore('objectDetails', () => {
         });
     }
 
+    function updateMapToAdmin() {
+        console.log("start")
+        if(!map.value) return;
+        console.log("update map to admin");
+        map.value.on('click', (e) => {
+            console.log(e.latlng);
+        })
+    }
     return {
         map,
         show,
@@ -110,5 +118,6 @@ export const useObjects = defineStore('objectDetails', () => {
         toggleShow,
         showObject,
         clearMap,
+        updateMapToAdmin
     };
 });

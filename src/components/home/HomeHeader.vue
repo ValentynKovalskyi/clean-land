@@ -9,18 +9,14 @@
                 variant="plain" 
                 :prepend-icon="navBtn.icon" 
                 @click="router.push(navBtn.route)">
-                    <span class="header__nav__btn" :class="{'header__nav__btn--currentRoute': route.name === navBtn.name}">{{ $t(navBtn.translation) }}</span>
+                    <span class="header__nav__btn" 
+                        :class="{'header__nav__btn--currentRoute': 
+                        route.name === navBtn.name}">
+                        {{ $t(navBtn.translation) }}
+                    </span>
                 </v-btn>
             </div>
             <div class="header__rightControl">
-<!--                 <template v-if="route.name === RouteNames.MAPVIEW || route.name === RouteNames.LISTVIEW">
-                    <v-btn v-if="isMapView" prepend-icon="mdi-format-list-bulleted" @click="router.push('/listview')">
-                        {{ $t("ListView") }}
-                    </v-btn>
-                    <v-btn v-else prepend-icon="mdi-map" @click="router.push('/')">
-                        {{ $t("MapView") }}
-                    </v-btn>
-                </template> -->
                 <v-btn variant="plain" prepend-icon="mdi-account-circle-outline" @click="router.push('/login')">
                     <span class="underline-nav-btn">{{ $t('Auth.Login') }}</span>
                 </v-btn>

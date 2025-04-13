@@ -8,9 +8,11 @@
   import { useObjects } from '@/stores/objectStore.js';
   import { useFetch } from '@/composables/useFetch';
   import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/stores/userStore';
 
   const mapContainer = ref(null);
-  const { toggleShow, showObject } = useObjects()
+  const { toggleShow, showObject, updateMapToAdmin } = useObjects()
+  const { isAdmin } = storeToRefs(useUserStore());
   const { map } = storeToRefs(useObjects());
   const { get, response, responseData } = useFetch()
 
@@ -21,35 +23,7 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(createdMap);
     
-    let ponds = []
-/*     await get('http://192.168.234.128:5000/api/Forest');
-    ponds = ponds.concat(responseData.value);
-    await get('http://192.168.234.128:5000/api/Ponds');
-    ponds = ponds.concat(responseData.value); */
-
-    /* if(true) {
-      const objects = mockData.map((forest) => {
-        const circle = L.circle([forest.xLocation, forest.yLocation], {
-    color: 'red',
-    fillColor: '#FF0000',
-    fillOpacity: 0.4,
-    radius: 1000
-    }).addTo(map)
-    circle.on('click', () => show(forest))
-      })
-      return
-    } */
-
-
-
-/*     // Додаємо коло
-   const circle = L.circle([49.250, 28.425], {
-    color: 'red',
-    fillColor: '#FF0000',
-    fillOpacity: 0.4,
-    radius: 1000 // Радіус у метрах
-  }).addTo(map)
- */
+    if(isAdmin) updateMapToAdmin();
 
   });
   </script>
