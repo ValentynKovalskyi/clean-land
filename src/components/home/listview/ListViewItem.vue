@@ -1,12 +1,12 @@
 <template>
     <v-card class="listviewitem" elevation="0">
-        <h2 class="details__name" v-title>
+        <h2 class="card-details__name" v-title @click="objectStore.showObject(object)">
                 {{ object.name }}
             </h2>
-            <v-rating
-                class="details__criticity"
+            <div class="card-details__criticity" v-tooltip:top="criticality + '/10'">
+                <v-rating
                 :length="criticalityMax"
-                v-model="criticity"
+                v-model="criticality"
                 size="small"
                 density="compact"
                 empty-icon="mdi-circle"
@@ -15,18 +15,19 @@
                 :active-color="criticityColor"
                 :title="object.criticalityScore"
                 readonly>
-            </v-rating>
-            <h3 class="details__district" v-title>
+            </v-rating></div>
+            
+            <h3 class="card-details__district" v-title>
                 {{ object.district || "Вінницька обл., Оратівський район" }}
             </h3>
-            <span class="details__coords">
+            <span class="card-details__coords">
                 <v-icon icon="mdi-map-marker-outline"/>
                 <a :href="getGoogleMapsHref(object.xLocation, object.yLocation)" target="_blank">
                     {{ object.xLocation + ', ' + object.yLocation }}
                 </a>
             </span>
-            <div class="details__actions">
-                <a class="details__donate">
+            <div class="card-details__actions">
+                <a class="card-details__donate">
                     <svg width="62" height="62" viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g filter="url(#filter0_d_380_888)">
 <rect x="11" y="11" width="40" height="40" rx="20" fill="white" shape-rendering="crispEdges"/>
@@ -50,7 +51,7 @@
 </defs>
 </svg>
                 </a>
-                <a class="details__problem">
+                <a class="card-details__problem">
                     <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g filter="url(#filter0_d_380_889)">
 <rect x="10" y="10" width="40" height="40" rx="20" fill="#FF0000" shape-rendering="crispEdges"/>
@@ -74,14 +75,19 @@
     </v-card>
 </template>
 <script setup>
+import { useCriticality } from '@/composables/useCriticality';
+import { useObjects } from '@/stores/objectStore';
 import { getGoogleMapsHref } from '@/utils/helpers/getGoogleMapHref';
+import { computed } from 'vue';
 
-defineProps({
+const props = defineProps({
     object: {
         type: Object,
         required: true,
     }
 })
+const objectStore = useObjects();
+const { criticalityMax, criticality, criticityColor } = useCriticality(computed(() => props.object.criticalityScore ?? 0))
 </script>
 <style lang="scss" scoped>
 .listviewitem {
@@ -94,11 +100,15 @@ defineProps({
     border: 1px solid rgb(206, 206, 206);
 }
 
-.details {
+.card-details {
     &__name {
     font-weight: 500;
     font-size: 1.4rem;
     @include text-ellipsis;
+    &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
     }
     &__criticity {
         align-self: center;

@@ -1,5 +1,5 @@
 <template>
-    <div class="map-header" :class="{'map-header--sidebar': show}">
+    <div class="map-header" :class="{'map-header--sidebar': show && !isListView}">
         <div class="mapsearch">
             <v-text-field
                 v-model="objectsStore.searchValue"
@@ -9,7 +9,7 @@
                 rounded="xl"
                 prepend-inner-icon="mdi-magnify"
                 hide-details />
-                <v-menu v-show="objectsStore.searchSuggests.length > 3" v-model="suggestsMenu" activator="parent" class="mapsearch__suggests">
+                <v-menu v-if="!isListView" v-model="suggestsMenu" activator="parent" class="mapsearch__suggests">
                     <v-list>
                         <v-list-item v-for="item in objectsStore.searchSuggests" 
                         class="suggests__item" 
@@ -37,19 +37,23 @@
             {{ isListView ? $t('MapView'): $t('ListView')}}
         </v-btn>
     </div>
-    <ListView v-if="isListView"/>
-    <MapView v-else/>
-    <SideDetails />
+    <Transition name="float">
+        <ListView v-if="isListView"/>
+    </Transition>
+    <MapView/>
+    <DialogDetails v-if="isListView"/>
+    <SideDetails v-else/>
 </template>
 <script setup>
 import ListView from '@/components/home/ListView.vue';
 import MapView from '@/components/home/MapView.vue';
-import SideDetails from '@/components/home/SideDetails.vue';
+import SideDetails from '@/components/details/SideDetails.vue';
 import { useObjects } from '@/stores/objectStore.js';
 import { Ecosystem } from '@/utils/constants/ecosystem.contants';
 import { searchFilter } from '@/utils/filters/search.filter';
 import { storeToRefs } from 'pinia';
 import { onMounted, computed, ref } from 'vue';
+import DialogDetails from '@/components/details/DialogDetails.vue';
 
 const objectsStore = useObjects();
 const { show, searchValue } = storeToRefs(objectsStore);
@@ -70,12 +74,12 @@ function getWithSearchHighlight(str) {
     @include centered-flex;
     justify-items: center;
     position: absolute;
+    z-index: 9;
     height: 5em;
     top: 5em;
     width: 60vw;
     right: 50%;
     transform: translateX(50%);
-    z-index: 2;
     gap: 1em;
     padding: 0 2em 0 2em;
     @include transition(all);
@@ -119,5 +123,16 @@ function getWithSearchHighlight(str) {
 
 .toggleButton {
     background-color: green;
+}
+
+.float-enter-active,
+.float-leave-active {
+  transition: all 0.5s ease;
+  transform: translateY(0%);
+}
+
+.float-enter-from,
+.float-leave-to {
+  transform: translateY(100%);
 }
 </style>

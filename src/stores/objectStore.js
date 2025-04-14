@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { computed, reactive, ref, watchEffect } from "vue";
 import mock from '@/api/mock/mock.json'
 import { Ecosystem } from "@/utils/constants/ecosystem.contants";
+import { getCircleStyle } from "@/utils/helpers/getCircleStyle";
 
 export const useObjects = defineStore('objectDetails', () => {
     const map = ref(null);
@@ -32,7 +33,6 @@ export const useObjects = defineStore('objectDetails', () => {
 
     function updateObjects() {
         let result = [];
-        console.log(filters.value);
         if (filters.value.includes(Ecosystem.FOREST)) result.push(...rawForests.value);
         if (filters.value.includes(Ecosystem.POND)) result.push(...rawPonds.value);
 
@@ -53,12 +53,7 @@ export const useObjects = defineStore('objectDetails', () => {
         clearMap();
 
         objects.value = objects.value.map(obj => {
-            const marker = L.circle([obj.xLocation, obj.yLocation], {
-                radius: 500,
-                color: "green",
-                fillColor: "#32a852",
-                fillOpacity: 0.5
-            });
+            const marker = L.circle([obj.xLocation, obj.yLocation], getCircleStyle(obj.criticalityScore));
 
             marker.addTo(map.value).bindPopup(obj.name);
 
@@ -68,7 +63,6 @@ export const useObjects = defineStore('objectDetails', () => {
         });
     }
     const searchSuggests = computed(() => {
-        console.log("as")
             return objects.value
             .filter(item => item.name.toLowerCase().includes(searchValue.value.toLowerCase()))
     })
@@ -97,9 +91,7 @@ export const useObjects = defineStore('objectDetails', () => {
     }
 
     function updateMapToAdmin() {
-        console.log("start")
         if(!map.value) return;
-        console.log("update map to admin");
         map.value.on('click', (e) => {
             console.log(e.latlng);
         })

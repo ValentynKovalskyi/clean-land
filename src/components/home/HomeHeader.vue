@@ -74,7 +74,7 @@ const navigationButtons = [
     position: absolute;
     background-color: $color-5;
     width: 100%;
-    z-index: 3;
+    z-index: 10;
 
     &__logo {
         @include centered-flex;

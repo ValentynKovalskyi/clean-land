@@ -1,7 +1,6 @@
 <template>
     <div class="listview">
-            <ListViewItem v-for="object in pageItems" :object="object"/>
-        <div class="listview__details"></div>
+        <ListViewItem v-for="object in pageItems" :object="object"/>
         <v-pagination class="listview__pagination" v-model="page" :length="pageCount" rounded="circle" variant="outlined"></v-pagination>
     </div>
 </template>
@@ -23,8 +22,13 @@ const pageItems = computed(() => {
 </script>
 <style lang="scss" scoped>
 .listview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
     height: 100vh;
     width: 100%;
+    background-color: #fff;
     padding-top: 10em;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
