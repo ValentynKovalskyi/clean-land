@@ -9,15 +9,13 @@
         >
         <v-card class="pa-4 problem-card">
           <div class="d-flex flex-column gap-2">
-            <div v-for="n in 3" :key="n">
-              {{ item }}
-            </div>
+              {{ item.description }}
           </div>
         </v-card>
         </v-window-item>
       </v-window>
   
-      <div class="d-flex justify-center align-center ga-2">
+      <div class="d-flex justify-center align-center ga-2" v-if="items.length > 1">
         <v-btn
           icon="mdi-arrow-left"
           variant="outlined"
@@ -41,11 +39,11 @@
   <script setup>
   import { ref } from 'vue'
   
-  const items = [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.',
-    'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.',
-    'Integer euismod, sapien nec consequat porta, orci augue fermentum nisi.'
-  ]
+defineProps({
+    items: {
+      type: Array,
+    }
+  })
   
   const current = ref(0)
   </script>

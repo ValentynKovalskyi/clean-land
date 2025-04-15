@@ -15,6 +15,7 @@ const { show } = storeToRefs(objectsStore);
 <style lang="scss">
 .details {
     &--side-panel {
+        min-height: 0;
         width: 30vw;
         bottom: 0;
         height: 85vh;
@@ -23,7 +24,7 @@ const { show } = storeToRefs(objectsStore);
         z-index: 2;
         position: absolute;
         transform: translateX(-100%);
-        grid-template-rows: max-content max-content max-content 1fr max-content max-content max-content max-content;
+        grid-template-rows: max-content max-content max-content max-content max-content max-content 1fr;
         grid-template-columns: 7fr 3fr 2em;
         @include transition;
         & .details {
@@ -44,14 +45,16 @@ const { show } = storeToRefs(objectsStore);
                 grid-column: span 3;
             }
             &__table { 
-                min-height: 0;
-                max-height: calc(100% - 15em);
+                max-height: 100%;
                 display: block;
                 height: 100%;
                 grid-column: span 3;
                 overflow-y: auto;
                 text-align: center;
                 width: 100%;
+                &--no-problems {
+                    max-height: unset;
+                }
             }
         }
     }

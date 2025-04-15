@@ -53,7 +53,7 @@ export const useObjects = defineStore('objectDetails', () => {
         clearMap();
 
         objects.value = objects.value.map(obj => {
-            const marker = L.circle([obj.xLocation, obj.yLocation], getCircleStyle(obj.criticalityScore));
+            const marker = L.circle([obj.xLocation, obj.yLocation], getCircleStyle(obj));
 
             marker.addTo(map.value).bindPopup(obj.name);
 

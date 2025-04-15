@@ -47,7 +47,7 @@
         "collectedDamages": "Collected Damages",
         "waterQualityIndex": "Water Quality Index",
         "oxygenSaturation": "Oxygen Saturation",
-        "pollutantConcentration": "Pullutant Concentrations",
+        "pollutantConcentration": "Pollutant Concentration",
         "isEutrophicated": "Eutrophicated",
         "algalBloomFrequency": "Algal Bloom Frequency",
         "hasAgricultureNearby": "Agriculture Nearby",
@@ -60,6 +60,23 @@
         "tonsOfSequesteredPotential": "Tons of Sequestered Potential",
         "averageYearTemperature": "Average Year Temperature",
         "averageYearHumidity": "Average Year Humidity",
-        "fireIncidentsAmount": "Fire Incidents"
-    }
+        "fireIncidentsAmount": "Fire Incidents",
+        "hydraulicStructureOwner": "Owner",
+        "lesseeName": "Lessee",
+        "cadastralNumber": "Cadastral Number",
+        "pollutionStatus": "Pollution Status"
+    },
+    "Search": "Search",
+    "MapView": "Map View",
+    "ListView": "List View",
+    "GeneralInfo": "General Information",
+    "WaterQualityInfo": "Water Quality Information",
+    "DetectedProblems": "Dectected Problems",
+    "ProblemsAreNotDetected": "Problems are not detected",
+    "InformationAboutObject": "Information About Object",
+    "ThereIsProblem": "There is problem",
+    "Donate": "Donate",
+    "NotifyAboutProblem": "Notify About Problem",
+    "DescribeProblem": "Describe the problem",
+    "Send": "Send"
 }

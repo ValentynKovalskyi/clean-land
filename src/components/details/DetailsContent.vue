@@ -1,6 +1,6 @@
 <template>
     <template v-if="object">
-            <h2 class="details__name">
+            <h2 class="details__name" v-title:overflow>
                 {{ object.name }}
             </h2>
             <div class="details__criticity" v-tooltip:top="object.criticalityScore + '/10'">
@@ -21,7 +21,7 @@
             <v-btn variant="plain" @click="objectsStore.toggleShow()" size="xs" density="compact" class="details__close">
                 <v-icon icon="mdi-close"></v-icon>
             </v-btn>
-            <h1 class="details__district">
+            <h1 class="details__district" v-title:overflow>
                 {{ object.district || "Вінницька обл., Оратівський район" }}
             </h1>
                 <span class="details__coords">
@@ -31,86 +31,23 @@
                     </a>
                 </span>
             <div class="details__actions">
-                <v-btn class="donate" variant="outlined" rounded="xl">Задонатити</v-btn>
+                <v-btn class="donate" variant="outlined" rounded="xl">{{ $t('Donate')}}</v-btn>
                 <ProblemDialog/>
             </div>
             <div class="details__problems">
                 <span class="title">                
-                        <span>Проблеми виявлені на об'єкті</span>
-                        <v-badge :content=3 color="red" inline size="small" density="compact"/>
+                        <span v-if="object.issues">{{ $t("DetectedProblems") }}
+                            <v-badge :content="object.issues.length" color="red" inline size="small" density="compact"/>
+                        </span>
+                        <span v-else>{{ $t("ProblemsAreNotDetected") }}</span>
                 </span>
-                <ProblemsGallery />
+                <ProblemsGallery v-if="object.issues" :items="object.issues"/>
             </div>
                 <span class="details__table__title title">                
-                        <span>Відомості про об'єкт</span>
+                        <span>{{ $t("InformationAboutObject") }}</span>
                 </span>
-                <div class="details__table">
-                    <table>
-                    <tr>
-                        <th colspan="2">Загальні відомості</th>
-                    </tr>
-                    <tr>
-                        <td>Відноситься до басейну річки</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Басейн</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Довжина:Ширина:Глибина</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Рівень води</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Власник</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Орендар</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Номер кадастру</td>
-                        <td>Басейн</td>
-                    </tr>
-                </table>
-                <table>
-                    <tr>
-                        <th colspan="2">Показники якості води</th>
-                    </tr>
-                    <tr>
-                        <td>Індекс якості води</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Насиченість киснем</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Ознаки евтрофікації</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Частота цітіння води на рік</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Концентрація забруднюючих речовин</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Відсоток заростання</td>
-                        <td>Басейн</td>
-                    </tr>
-                    <tr>
-                        <td>Відсоток замулення</td>
-                        <td>Басейн</td>
-                    </tr>
-                </table>
+                <div class="details__table" :class="{ 'details__table--no-problems': !object.issues }">
+                    <PondTable :object="object" v-if="object.waterLevel"/>
                 </div>
         </template>
 </template>
@@ -123,6 +60,7 @@ import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ProblemsGallery from '../details/ProblemsGallery.vue';
 import { useCriticality } from '@/composables/useCriticality';
+import PondTable from './PondTable.vue';
 
 const objectsStore = useObjects();
 const { t } = useI18n();

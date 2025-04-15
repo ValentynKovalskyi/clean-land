@@ -23,7 +23,7 @@ import { useUserStore } from '@/stores/userStore';
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(createdMap);
     
-    if(isAdmin) updateMapToAdmin();
+    if(isAdmin.value) updateMapToAdmin();
 
   });
   </script>

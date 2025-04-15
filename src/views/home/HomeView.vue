@@ -4,7 +4,7 @@
             <v-text-field
                 v-model="objectsStore.searchValue"
                 variant="solo-filled"
-                placeholder="Search"
+                :placeholder="$t('Search')"
                 density="compact"
                 rounded="xl"
                 prepend-inner-icon="mdi-magnify"
@@ -86,10 +86,10 @@ function getWithSearchHighlight(str) {
     & > * {
         @include shadow(3px);
         &:nth-child(1) {
-            flex-grow: 4;
+            flex-grow: 3;
         }
         &:nth-child(2) {
-            flex-grow: 2;
+            flex-grow: 3;
         }
         &:nth-child(3) {
             flex-grow: 1;
