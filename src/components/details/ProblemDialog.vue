@@ -1,21 +1,21 @@
 <template>
     <v-dialog v-model="dialog">
         <template #activator="{ props: activatorProps}">
-            <v-btn class="problem" rounded="xl" v-bind="activatorProps">Є проблема!</v-btn>
+            <v-btn class="problem" rounded="xl" v-bind="activatorProps">{{ $t('ThereIsProblem')}}</v-btn>
         </template>
         <template #default="{ isActive }">
             <v-card class="problem-form" rounded="xl">
                 <v-card-title>
-                    <h2>Сповістити про проблему</h2>
+                    <h2>{{ $t('NotifyAboutProblem') }}</h2>
                 </v-card-title>
                 <v-card-text>
                     <v-form ref="form" v-model="isValid">
-                        <v-textarea v-model="description" placeholder="Опис проблеми" height="100" variant="outlined" no-resize :rules="[validations.minLength(20)]">
+                        <v-textarea v-model="description" :placeholder="$t('DescribeProblem')" height="100" variant="outlined" no-resize :rules="[validations.minLength(20)]">
                         </v-textarea>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn @click="handleSend()">Надіслати</v-btn>
+                    <v-btn @click="handleSend()">{{ $t('Send') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </template>
@@ -23,13 +23,13 @@
 </template>
 <script setup>
 import { useFetch } from '@/composables/useFetch';
-import { useObjectDetails } from '@/stores/objectDetailsState';
+import { useObjects } from '@/stores/objectStore.js';
 import { validations } from '@/utils/constants/validations.constants';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 
-const objectDetails = useObjectDetails();
-const { show, object, objects } = storeToRefs(objectDetails);
+const objectsStore = useObjects();
+const { show, object, objects } = storeToRefs(objectsStore);
 const description = ref('');
 const dialog = ref(false);
 const form = ref(null);
@@ -44,12 +44,8 @@ async function handleSend() {
         const { issues, ...rest } = object.value
         const data = {
             ...rest,
-            issues: [ ...(issues? issues: []), newIssue],
+            issues: [ ...(issues ? issues: []), newIssue],
         }
-/*         await put(`http://192.168.234.128:5000/api/Ponds/${object.value.id}`, data)
-        if(response.value.ok) {
-            dialog.value = false;
-        } */
         objectDetails.addToIssue(newIssue);
         dialog.value = false;
 }

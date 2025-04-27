@@ -14,6 +14,7 @@ import AuthHeader from "@components/auth/AuthHeader.vue"
 .form-container {
     @include centered-flex;
     height: 100vh;
+    background-color: $color-5;
 }
 .footer {
     height: 2em;
