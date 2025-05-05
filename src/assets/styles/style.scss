@@ -15,7 +15,9 @@
 *, *::before, *::after {
     box-sizing: border-box;
 }
-
+html {
+    overflow-y: hidden;
+}
 body {
     margin: 0;
 }
@@ -53,3 +55,4 @@ body {
         width: 80%;
     }
 }
+

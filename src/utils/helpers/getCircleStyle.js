@@ -1,12 +1,12 @@
 export const getCircleStyle = (obj) => {
     const criticalityMax = 6;
-    const criticalityValue = Math.round(obj.criticalityScore / 10 * criticalityMax);
+    const criticalityValue = obj.criticalityScore//Math.round(obj.criticalityScore / 10 * criticalityMax);
     let fillColor = "#32a852";
     let color = "blue";
 
-    if (criticalityValue > 4) {
+    if (criticalityValue > 6) {
         fillColor = "#ff0000";
-    } else if (criticalityValue > 2) {
+    } else if (criticalityValue > 4) {
         fillColor = "#ffff00";
     }
     //object type check

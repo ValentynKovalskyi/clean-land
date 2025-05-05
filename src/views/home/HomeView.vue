@@ -22,7 +22,19 @@
                 </v-menu>
         </div>
         <v-select
-        v-model="objectsStore.filters"
+        v-model="objectsStore.critFilters"
+        multiple
+        chips
+        :label="$t('Criticality')" 
+        clearable
+        variant="solo-filled"
+        density="compact"
+        rounded="xl"
+        hide-details
+        :items="Object.values(Crit)"
+        />
+        <v-select
+        v-model="objectsStore.ecoFilters"
         multiple
         chips
         :label="$t('Ecosystem')" 
@@ -54,6 +66,7 @@ import { searchFilter } from '@/utils/filters/search.filter';
 import { storeToRefs } from 'pinia';
 import { onMounted, computed, ref } from 'vue';
 import DialogDetails from '@/components/details/DialogDetails.vue';
+import { Crit } from '@/utils/constants/crit.constants';
 
 const objectsStore = useObjects();
 const { show, searchValue } = storeToRefs(objectsStore);
@@ -89,9 +102,14 @@ function getWithSearchHighlight(str) {
             flex-grow: 3;
         }
         &:nth-child(2) {
-            flex-grow: 3;
+            flex-grow: 2;
+            flex-basis: 100px;
         }
         &:nth-child(3) {
+            flex-grow: 2;
+            flex-basis: 100px;
+        }
+        &:nth-child(4) {
             flex-grow: 1;
         }
     }

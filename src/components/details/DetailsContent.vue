@@ -32,11 +32,13 @@
                 </span>
             <div class="details__actions">
                 <v-btn class="donate" variant="outlined" rounded="xl">{{ $t('Donate')}}</v-btn>
-                <ProblemDialog/>
+                <ProblemDialog v-slot="{ activatorProps}">
+                    <v-btn class="problem" rounded="xl" v-bind="activatorProps">{{ $t('ThereIsProblem')}}</v-btn>
+                </ProblemDialog>
             </div>
             <div class="details__problems">
                 <span class="title">                
-                        <span v-if="object.issues">{{ $t("DetectedProblems") }}
+                        <span v-if="object.issues?.length">{{ $t("DetectedProblems") }}
                             <v-badge :content="object.issues.length" color="red" inline size="small" density="compact"/>
                         </span>
                         <span v-else>{{ $t("ProblemsAreNotDetected") }}</span>
@@ -67,3 +69,10 @@ const { t } = useI18n();
 const { object } = storeToRefs(objectsStore);
 const { criticalityMax, criticality, criticityColor } = useCriticality(computed(() => object.value?.criticalityScore ?? 0))
 </script>
+<style>
+.problem {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+}
+</style>

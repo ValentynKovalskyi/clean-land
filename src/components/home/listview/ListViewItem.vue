@@ -51,7 +51,8 @@
 </defs>
 </svg>
                 </a>
-                <a class="card-details__problem">
+                <ProblemDialog v-slot="{ activatorProps }">
+                <a class="card-details__problem" v-bind="activatorProps">
                     <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g filter="url(#filter0_d_380_889)">
 <rect x="10" y="10" width="40" height="40" rx="20" fill="#FF0000" shape-rendering="crispEdges"/>
@@ -71,10 +72,12 @@
 </defs>
 </svg>
                 </a>
+            </ProblemDialog>
             </div>
     </v-card>
 </template>
 <script setup>
+import ProblemDialog from '@/components/details/ProblemDialog.vue';
 import { useCriticality } from '@/composables/useCriticality';
 import { useObjects } from '@/stores/objectStore';
 import { getGoogleMapsHref } from '@/utils/helpers/getGoogleMapHref';
@@ -89,7 +92,7 @@ const props = defineProps({
 const objectStore = useObjects();
 const { criticalityMax, criticality, criticityColor } = useCriticality(computed(() => props.object.criticalityScore ?? 0))
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .listviewitem {
     padding: 1em;
     display: grid;

@@ -13,8 +13,8 @@ import { storeToRefs } from 'pinia';
 const objectsStore = useObjects();
 const { searchSuggests } = storeToRefs(objectsStore);
 const page = ref(1);
-const pageSize = 4;
-const pageCount = computed(() => searchSuggests.value.length / pageSize)
+const pageSize = 16;
+const pageCount = computed(() => Math.ceil(Math.max(searchSuggests.value.length / pageSize, 1)))
 const pageItems = computed(() => {
     const start = (page.value - 1) * pageSize;
     return searchSuggests.value.slice(start, start + pageSize);
