@@ -1,23 +1,9 @@
 <template>
-    <v-dialog v-model="dialog">
+    <v-dialog v-model="dialog" centered>
         <template v-slot:default="{ isActive }">
-            <v-card class="custom-dialog" rounded="lg">
-            <v-card-title>
-                <h3>AI Assistant</h3>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text>
-                <Message></Message>
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-                <v-btn hide-details>
-                    {{ $t("AI.Send") }}
-                </v-btn>
-                <v-text-field hide-details variant="outlined" :placeholder="$t('AskYourQuestion')">
-                </v-text-field>
-            </v-card-actions>
-        </v-card>
+            <div class="custom-dialog">
+
+            </div>
         </template>
         <template v-slot:activator="{ props: activatorProps }">
                 <button  class="ai-chat-button" v-bind="activatorProps">
@@ -64,11 +50,22 @@ const dialog = ref(false);
 .custom-dialog {
   position: absolute;
   bottom: 20px;
+  background-color: $color-4;
   right: 20px;
   margin: 0;
   width: 30vw;
-  height: 30vw;
-  transform: translateY(75%);
+  height: 30vh;
+  //transform: translateY(75%);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: stretch;
+  & > .v-card-title {
+    height: min-content;
+    & > h3 {
+        height: 2em;
+    }
+  }
 }
 
 .ai-chat-button {

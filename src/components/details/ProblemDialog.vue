@@ -16,7 +16,7 @@
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn @click="handleSend()" class="mr-3 mb-3">{{ $t('Send') }}</v-btn>
+                    <v-btn @click="handleSend()" class="mr-3 mb-3" :loading="loadingStore.isLoading">{{ $t('Send') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </template>
@@ -24,8 +24,12 @@
 </template>
 <script setup>
 import { useFetch } from '@/composables/useFetch';
+import { useHandledAsync } from '@/composables/useHandledAsync';
+import { useLoadingStore } from '@/stores/loading.store';
+import { useNotificationStore } from '@/stores/notification.store';
 import { useObjects } from '@/stores/objectStore.js';
 import { validations } from '@/utils/constants/validations.constants';
+import axios from 'axios';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 
@@ -35,22 +39,32 @@ const description = ref('');
 const dialog = ref(false);
 const form = ref(null);
 const { put, response } = useFetch();
+const notifications = useNotificationStore();
 const isValid = ref()
+const { getActionWithHandling } = useHandledAsync();
+const loadingStore = useLoadingStore();
 async function handleSend() {
-    if(!isValid.value) return;
+    await getActionWithHandling(async () => {
+        if(!isValid.value) return;
         const newIssue = {
             description: description.value,
             date: new Date().toISOString(),
             isResolved: false,
+            isAccepted: false,
         }
-        const { issues, mapMarker, ...rest } = object.value
-        const data = {
-            ...rest,
-            issues: [ ...(issues ? issues: []), newIssue],
+        if(object.value.assetType === "Forest") {
+            newIssue.forestId = object.value.id;
+            newIssue.pondId = null;
+        } else {
+            newIssue.forestId = null;
+            newIssue.pondId = object.value.id;
         }
-        objectsStore.updateObject(data);
-        dialog.value = false;
+
+        const response = await axios.post("http://localhost:5000/api/Issues", newIssue)
         description.value = '';
+        dialog.value = false;
+        notifications.show("Problem successfully created!")
+    })()
 }
 </script>
 <style lang="scss">

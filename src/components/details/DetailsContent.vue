@@ -48,8 +48,9 @@
                 <span class="details__table__title title">                
                         <span>{{ $t("InformationAboutObject") }}</span>
                 </span>
-                <div class="details__table" :class="{ 'details__table--no-problems': !object.issues }">
-                    <PondTable :object="object" v-if="object.waterLevel"/>
+                <div class="details__table" :class="{ 'details__table--no-problems': !object.issues?.length }">
+                    <PondTable :object="object" v-if="object.assetType === 'Pond'"/>
+                    <ForestTable :object="object" v-if="object.assetType === 'Forest'"/>
                 </div>
         </template>
 </template>
@@ -63,6 +64,7 @@ import { useI18n } from 'vue-i18n';
 import ProblemsGallery from '../details/ProblemsGallery.vue';
 import { useCriticality } from '@/composables/useCriticality';
 import PondTable from './PondTable.vue';
+import ForestTable from './ForestTable.vue';
 
 const objectsStore = useObjects();
 const { t } = useI18n();

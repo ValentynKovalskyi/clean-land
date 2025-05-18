@@ -52,7 +52,7 @@
         "algalBloomFrequency": "Algal Bloom Frequency",
         "hasAgricultureNearby": "Agriculture Nearby",
         "hasIndustryNearby": "Industry Nearby",
-        "ngo": "ngo",
+        "ngo": "Non-govermental organization",
         "isProtectedByLaw": "Protected By Law",
         "treesAmount": "Trees Amount",
         "treeSpecies": "Tree Species",
@@ -64,7 +64,13 @@
         "hydraulicStructureOwner": "Owner",
         "lesseeName": "Lessee",
         "cadastralNumber": "Cadastral Number",
-        "pollutionStatus": "Pollution Status"
+        "pollutionStatus": "Pollution Status",
+        "area": "Area",
+        "TreeSpecies": "Tree Species",
+        "endemic": "Endemic",
+        "invasive": "Invasive",
+        "notEndemic": "Not Endemic",
+        "notInvasive": "Not Invasive"
     },
     "Search": "Search",
     "MapView": "Map View",

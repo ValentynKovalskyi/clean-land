@@ -38,7 +38,7 @@
         </div>
         <div class="vacancy__actions">
             <span>{{ $t("Volunteers") + ':' + item.appliedPeople + '/' + item.neededPeople }}</span>
-            <v-btn color="green" rounded="xl">{{ $t("Become a volunteer") }}</v-btn>
+            <VolounteerDialog :vacancy-id="item.id" :disabled="item.appliedPeople >= item.neededPeople"/>
         </div>
     </div>
 </template>
@@ -46,6 +46,7 @@
 import { useCriticality } from '@/composables/useCriticality';
 import { getGoogleMapsHref } from '@/utils/helpers/getGoogleMapHref';
 import { computed } from 'vue';
+import VolounteerDialog from './details/VolounteerDialog.vue';
 
 const props = defineProps({
     item: Object,

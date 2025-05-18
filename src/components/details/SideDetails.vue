@@ -173,6 +173,10 @@ const { show } = storeToRefs(objectsStore);
             width: 50%;
             text-align: start;
             padding-left: 2em;
+            &[colspan="2"] {
+                text-align: center;
+                padding-left: 0;
+            }
         }
         th, td {
             border: 1px solid rgb(179, 179, 179);

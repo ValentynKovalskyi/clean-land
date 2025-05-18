@@ -60,7 +60,13 @@
     "hydraulicStructureOwner": "Власник",
     "lesseeName": "Орендар",
     "cadastralNumber": "Кадастровий номер",
-    "pollutionStatus": "Стан забруднення"
+    "pollutionStatus": "Стан забруднення",
+    "area": "Площа",
+    "TreeSpecies": "Види дерев",
+    "endemic": "Ендемічний",
+    "invasive": "Інвазивний",
+    "notEndemic": "Неендемічний",
+    "notInvasive": "Неінвазивний"
 },
     "Search": "Шукати",
     "MapView": "Подання мапою",

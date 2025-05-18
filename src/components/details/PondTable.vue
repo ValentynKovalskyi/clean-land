@@ -46,7 +46,7 @@
                     </tr>
                     <tr>
                         <td>{{ $t('Object.isEutrophicated') }}</td>
-                        <td>{{ object.isEutrophicated }}</td>
+                        <td>{{ object.isEutrophicated ? $t('Yes'): $t('No') }}</td>
                     </tr>
                     <tr>
                         <td>{{ $t('Object.algalBloomFrequency') }}</td>

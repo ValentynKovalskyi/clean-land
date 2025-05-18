@@ -26,18 +26,16 @@ export const useObjects = defineStore('objectDetails', () => {
         if (!rawForests.value.length) {
           const { data } = await axios.get("http://localhost:5000/api/Forest");
           rawForests.value = data;
-          const mockForests = mock.filter(item => item.treesAmount);
-          rawForests.value.push(...mockForests)
+          //const mockForests = mock.filter(item => item.treesAmount);
+          //rawForests.value.push(...mockForests)
         }
 
         if (!rawPonds.value.length) {
           const { data } = await axios.get("http://localhost:5000/api/Ponds");
           rawPonds.value = data;
-          const mockPonds = mock.filter(item => !item.treesAmount);
-          rawPonds.value.push(...mockPonds);
+          //const mockPonds = mock.filter(item => !item.treesAmount);
+          //rawPonds.value.push(...mockPonds);
         }
-
-        console.log(rawForests.value, rawPonds.value);
     }
 
     function updateObjects() {

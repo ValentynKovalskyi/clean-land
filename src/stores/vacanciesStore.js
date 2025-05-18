@@ -14,8 +14,6 @@ export const useVacanciesStore = defineStore('vacancies', () => {
         } catch (e) {
 
         }
-        vacancies.value.push(...vacanciesMock)
-        console.log(vacanciesMock)
     }
 
     const searchVacancies = computed(() => {
