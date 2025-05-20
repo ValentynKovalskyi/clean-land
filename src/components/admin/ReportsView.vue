@@ -5,7 +5,6 @@
             <v-icon icon="mdi-message-badge" size="large" :title="$t('Create')"></v-icon>
         </v-btn>
       </template>
-  
       <v-card class="w-full">
         <v-card-text class="w-full d-flex flex-column ga-3">
             <v-expansion-panels v-for="object of objectsStore.objectsWithReports" :key="object.id" class="w-full">

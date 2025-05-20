@@ -5,7 +5,7 @@ export const useHandledAsync = () => {
     const loading = useLoadingStore()
     const { show } = useNotificationStore();
 
-    function getActionWithHandling (callback) {
+    function getActionWithHandling (callback, finallyAction=()=>{}) {
         return async function (...args) {
             loading.start();
             try {
@@ -19,6 +19,7 @@ export const useHandledAsync = () => {
                 show(errorMessage, 'error');
             } finally {
                 loading.stop();
+                finallyAction();
             }
         }
     }

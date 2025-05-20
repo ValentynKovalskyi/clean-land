@@ -1,12 +1,33 @@
 <template>
-    <v-dialog v-model="dialog" centered>
-        <template v-slot:default="{ isActive }">
-            <div class="custom-dialog">
+    <ModalWindow>
+<template v-slot:default="{ hideModal }" >
+            <div class="ai-dialog">
+                <div class="ai-dialog__header">
+                    <h3>
+                        AI Assistant
+                    </h3>
+                    <v-btn variant="plain" size="xs" density="compact" class="pa-1" @click="hideModal">
+                        <v-icon icon="mdi-close"></v-icon>
+                    </v-btn>
+                </div>
+                <div class="scroll-helper" ref="messagesDiv">
+                    <TransitionGroup name="messages" tag="div" class="ai-dialog__messages">
+                        <Message v-for="(message, index) of history" :key="index" :text="message.text" :their="message.their"/>
+                        <Message v-if="isWaitingResponse" :text="`Waiting for response${dots}`" :their="true"/> 
+                    </TransitionGroup>
+                </div>
+                <div class="ai-dialog__prompt">
+                    <v-btn variant="plain" density="comfortable" @click="handleSendMessage" :disabled="!isSendAvailable">
+                        {{ $t("Send") }}
+                    </v-btn>
+                    <v-textarea v-model="newMessage" variant="outlined" no-resize class="ai-dialog__prompt__textarea" rows="1" hide-details> 
 
+                    </v-textarea>
+                </div>
             </div>
         </template>
-        <template v-slot:activator="{ props: activatorProps }">
-                <button  class="ai-chat-button" v-bind="activatorProps">
+        <template #activator="{ showModal }">
+                <button  class="ai-chat-button" @click="showModal">
                     <svg width="100" height="100" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g filter="url(#filter0_d_409_1299)">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M60 112C31.2798 112 8 88.7203 8 60C8 31.2798 31.2798 8 60 8C88.7203 8 112 31.2798 112 60C112 88.7203 88.7203 112 60 112ZM60.91 83.8063C64.251 86.117 68.489 87.4917 73.078 87.4917C74.2198 87.4917 75.3454 87.4083 76.4548 87.2415C76.835 87.3975 77.2022 87.5892 77.654 87.8493C78.629 88.4212 79.929 89.2988 81.554 90.4818C82.8832 91.4535 84.765 90.5143 84.765 88.8795V84.1312C85.4475 83.6892 86.0921 83.2104 86.6988 82.6947C90.3713 79.5813 92.5 75.3237 92.5 70.7575C92.5 67.7512 91.59 64.94 89.991 62.5123C89.4853 64.2357 88.8024 65.9021 87.9532 67.4847C88.2934 68.5356 88.4657 69.6265 88.47 70.7575C88.47 74.118 86.884 77.29 84.076 79.669C83.3513 80.2808 82.5712 80.8237 81.7458 81.2907C81.4394 81.463 81.1844 81.7136 81.0068 82.0168C80.8292 82.3201 80.7354 82.6651 80.735 83.0165V85.0445C78.8077 83.8095 77.485 83.2277 76.4775 83.2277C76.3644 83.2316 76.2516 83.2414 76.1395 83.257C73.3158 83.7287 70.4213 83.5396 67.683 82.7045C65.4651 83.2796 63.1989 83.6495 60.9132 83.8095L60.91 83.8063ZM36.6455 74.3098C37.7154 75.2189 38.8493 76.0498 40.0385 76.796V84.895C40.0385 86.9425 42.3947 88.1125 44.0555 86.897C48.638 83.5495 51.823 81.658 52.6193 81.4695C54.4609 81.762 56.3329 81.9082 58.2352 81.9082C75.1352 81.9082 88.9738 70.1855 88.9738 55.5182C88.9738 40.8478 75.132 29.125 58.2352 29.125C41.3385 29.125 27.5 40.8477 27.5 55.515C27.5 62.6975 30.8475 69.3957 36.6455 74.3098ZM52.7297 76.4743C51.095 76.4743 48.7063 77.628 45.0793 80.0622V75.392C45.076 74.9527 44.9571 74.522 44.7346 74.1432C44.5121 73.7644 44.1939 73.4508 43.8117 73.234C42.4364 72.4517 41.1353 71.5456 39.9247 70.5268C35.2025 66.5325 32.5375 61.1895 32.5375 55.515C32.5375 43.7825 43.9645 34.104 58.2352 34.104C72.5092 34.104 83.933 43.7825 83.933 55.515C83.933 67.2475 72.5092 76.9292 58.2352 76.9292C56.5106 76.9292 54.8162 76.7884 53.1522 76.5068C53.0123 76.4867 52.8711 76.4759 52.7297 76.4743ZM45.1345 60.4972C47.3607 60.4972 49.1645 58.7098 49.1645 56.5127C49.1645 54.3125 47.3607 52.5283 45.1345 52.5283C42.9082 52.5283 41.1045 54.3125 41.1045 56.5127C41.1045 58.713 42.9082 60.4972 45.1345 60.4972ZM58.2352 60.4972C60.4615 60.4972 62.2653 58.7098 62.2653 56.5127C62.2653 54.3125 60.4615 52.5283 58.2352 52.5283C56.009 52.5283 54.2052 54.3125 54.2052 56.5127C54.2052 58.713 56.009 60.4972 58.2352 60.4972ZM71.336 60.4972C73.5623 60.4972 75.366 58.7098 75.366 56.5127C75.366 54.3125 73.5623 52.5283 71.336 52.5283C69.1098 52.5283 67.306 54.3125 67.306 56.5127C67.306 58.713 69.1098 60.4972 71.336 60.4972Z" fill="#288A28"/>
@@ -27,45 +48,93 @@
 </svg>
                 </button>
         </template>
-    </v-dialog>
+    </ModalWindow>
 </template>
 <script setup>
-import { ref } from 'vue';
-import { WebSocket } from 'ws';
-const dialog = ref(false);
+import { computed, nextTick, reactive, ref, watch } from 'vue';
+import ModalWindow from '../ModalWindow.vue';
+import Message from './Message.vue';
+import axios from 'axios';
+import { useHandledAsync } from '@/composables/useHandledAsync';
+import { useLoadingDots } from '@/composables/useLoadingDots';
+const newMessage = ref('')
+const messagesDiv = ref(null);
+const isWaitingResponse = ref(false);
+const { getActionWithHandling } = useHandledAsync();
+const history = reactive([]);
+const isSendAvailable = computed(() => {
+    return !!newMessage.value && !isWaitingResponse.value;
+})
+const { dots } = useLoadingDots();
 
+const handleSendMessage = async () => {
+    const userPrompt = newMessage.value.trim();
+    newMessage.value = '';
+    history.push({ text: userPrompt, their: false });
+    await getActionWithHandling(async () => {
+        isWaitingResponse.value = true;
+        const response = await axios.get(`http://localhost:5000/api/PythonRunner/run?name=${userPrompt}`)
+        if(response.status === 200) {
+            history.push({ text: response.data.text, their: true});
+        }
+    }, () => isWaitingResponse.value = false)()
+}
 
-
-//const ws =WebSocket('ws://')
-// Підключення до сервера WebSocket
-//const socket = new WebSocket('ws://192.168.47.115:8765');
-
-/* socket.onopen = () => {
-    console.log('Підключення до сервера WebSocket встановлено!');
-};
-
- */
+watch(history, async() => {
+    await nextTick();
+    messagesDiv.value.scrollTop = messagesDiv.value.scrollHeight;
+})
 </script>
 <style scoped lang="scss">
-.custom-dialog {
-  position: absolute;
-  bottom: 20px;
-  background-color: $color-4;
-  right: 20px;
+.scroll-helper {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.ai-dialog {
+  position: fixed;
+  background-color: $color-5;
+  bottom: 5rem;
+  border-radius: 1rem;
+  padding: 1em;
+  right: 5rem;
   margin: 0;
-  width: 30vw;
-  height: 30vh;
-  //transform: translateY(75%);
+  gap: 0.5em;
+  width: 40vw;
+  height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: start;
   justify-content: stretch;
-  & > .v-card-title {
-    height: min-content;
-    & > h3 {
-        height: 2em;
+  &__header {
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em 1em;
+    width: 100%;
+  }
+  &__messages {
+    flex-grow: 1;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    gap: 1em;
+    padding: 1em;
+    flex-direction: column;
+  }
+  &__prompt {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    align-content: end;
+    &__textarea {
+        width: 100%;
     }
   }
+
 }
 
 .ai-chat-button {
@@ -73,5 +142,21 @@ const dialog = ref(false);
     position: absolute;
     bottom: 2em;
     right: 2em;
+}
+
+.messages-move,
+.messages-enter-active,
+.messages-leave-active {
+    transition: all 0.3s ease;
+}
+
+.messages-enter-from.mine, .messages-leave-to.mine {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.messages-enter-from.their, .messages-leave-to.their {
+  transform: translateX(-100%);
+  opacity: 0;
 }
 </style>
