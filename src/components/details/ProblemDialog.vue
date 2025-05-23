@@ -13,6 +13,9 @@
                     <v-form ref="form" v-model="isValid">
                         <v-textarea v-model="description" :placeholder="$t('DescribeProblem')" variant="outlined" no-resize :rules="[validations.minLength(20)]">
                         </v-textarea>
+                        <v-file-input variant="outlined" :placeholder="$t('UploadImage')">
+
+                        </v-file-input>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>

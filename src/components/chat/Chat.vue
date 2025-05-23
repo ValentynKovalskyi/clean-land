@@ -20,7 +20,8 @@
                     <v-btn variant="plain" density="comfortable" @click="handleSendMessage" :disabled="!isSendAvailable">
                         {{ $t("Send") }}
                     </v-btn>
-                    <v-textarea v-model="newMessage" variant="outlined" no-resize class="ai-dialog__prompt__textarea" rows="1" hide-details> 
+                    <v-textarea v-model="newMessage" variant="outlined" no-resize class="ai-dialog__prompt__textarea" rows="1" hide-details
+                    @keydown.enter.prevent="handleSendMessage"> 
 
                     </v-textarea>
                 </div>
@@ -73,9 +74,9 @@ const handleSendMessage = async () => {
     history.push({ text: userPrompt, their: false });
     await getActionWithHandling(async () => {
         isWaitingResponse.value = true;
-        const response = await axios.get(`http://localhost:5000/api/PythonRunner/run?name=${userPrompt}`)
+        const response = await axios.get(`http://localhost:5000/api/PythonRunner/run?question=${userPrompt}`)
         if(response.status === 200) {
-            history.push({ text: response.data.text, their: true});
+            history.push({ text: response.data.result, their: true});
         }
     }, () => isWaitingResponse.value = false)()
 }
