@@ -1,7 +1,7 @@
 <template>
     <div class="vacancy">
         <h2 class="vacancy__title">{{ item.title}}</h2>
-        <h3 class="vacancy__wage">{{ item.wage + "$" }}</h3>
+        <h3 class="vacancy__wage">{{ "€" + item.wage }}</h3>
         <div class="vacancy__object">
             <div>
                 <h2 class="card-details__name" v-title>
@@ -56,7 +56,10 @@ const { criticalityMax, criticality, criticityColor } = useCriticality(computed(
 </script>
 <style lang="scss">
 .vacancy {
+    height: 100%;
+    width: 100%;
     display: grid;
+    padding: 1em;
     grid-template-columns: 1fr 1fr;
     row-gap: 1em;
     grid-template-rows: max-content max-content max-content max-content;

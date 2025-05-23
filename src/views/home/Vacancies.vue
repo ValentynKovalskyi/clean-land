@@ -13,7 +13,7 @@
         <div class="vacancies__list">
             <Vacancy v-for="item of pageItems" :item="item" :key="item.id" />
         </div>
-        <v-pagination class="listview__pagination" v-model="page" :length="pageCount" rounded="circle" variant="outlined"></v-pagination>
+        <v-pagination class="vacancies__pagination" v-model="page" :length="pageCount" rounded="circle" variant="outlined"></v-pagination>
     </div>
 </template>
 <script setup>
@@ -40,27 +40,34 @@ onMounted(async () => {
 </script>
 <style lang="scss">
 .vacancies {
-    height: 100vh;
-    overflow: hidden;
-    //background-color: red;
+    height: 100%;
     width: 100%;
+    //background-color: red;
+    overflow: hidden;
     padding: 10rem 2rem 2rem 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: end;
-    &:nth-child(1) {
-        flex-grow: 10;
-    }
-    &:nth-child(2) {
-        flex-grow: 1;
+    justify-content: start;
+    align-items: stretch;
+
+    &__pagination {
+        margin-top: auto;
+        flex-shrink: 0;
     }
     &__list {
         display: grid;
-        height: 100%;
+        flex: 1;
         grid-template-columns: 1fr 1fr;
-        gap: 1em;
-        grid-template-rows: repeat(5, max-content);
+        row-gap: 2rem;
+        column-gap: 1rem;
+        //align-items: center;
+        //justify-items: center;
+        align-content: stretch;
+        width: 100%;
+        padding: 0 5rem;
+        grid-auto-rows: max-content;
         overflow-y: auto;
+        min-height: 0;
     }
 }
 </style>
