@@ -44,7 +44,7 @@ onMounted(async () => {
     width: 100%;
     //background-color: red;
     overflow: hidden;
-    padding: 10rem 2rem 2rem 1rem;
+    padding: 10rem 0rem 2rem 0rem;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -64,10 +64,11 @@ onMounted(async () => {
         //justify-items: center;
         align-content: stretch;
         width: 100%;
-        padding: 0 5rem;
+        //padding: 0 5rem;
         grid-auto-rows: max-content;
         overflow-y: auto;
         min-height: 0;
+        
     }
 }
 </style>

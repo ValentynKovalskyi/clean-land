@@ -45,7 +45,7 @@
 <script setup>
 import { useCriticality } from '@/composables/useCriticality';
 import { getGoogleMapsHref } from '@/utils/helpers/getGoogleMapHref';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import VolounteerDialog from './details/VolounteerDialog.vue';
 
 const props = defineProps({
@@ -53,6 +53,17 @@ const props = defineProps({
 })
 
 const { criticalityMax, criticality, criticityColor } = useCriticality(computed(() => props.item.object.criticalityScore ?? 0))
+const description = ref();
+
+/* onMounted(() => {
+    if(props.item.description.length) {
+        description.value.split('\n').map((paragraph) => {
+            const p = document.createElement('p');
+            p.innerText = paragraph;
+            p
+        })
+    }
+}) */
 </script>
 <style lang="scss">
 .vacancy {
@@ -89,6 +100,7 @@ const { criticalityMax, criticality, criticityColor } = useCriticality(computed(
     &__description {
         grid-column: span 2;
         grid-row: 3;
+        text-indent: 1.5em;
     }
     &__actions {
         grid-column: span 2;
