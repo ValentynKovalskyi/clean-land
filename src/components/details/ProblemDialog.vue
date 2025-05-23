@@ -8,14 +8,16 @@
                 <v-card-title>
                     <h2>{{ $t('NotifyAboutProblem') }}</h2>
                 </v-card-title>
-                <v-card-text>
+                <v-card-text class="d-flex flex-column ga-sm-2">
                     <p class="mb-3" style="font-weight: 500;">{{ $t("If you detect any ecological issues on this site, please let us know. Describe the problem in a few sentences.") }}</p>
                     <v-form ref="form" v-model="isValid">
-                        <v-textarea v-model="description" :placeholder="$t('DescribeProblem')" variant="outlined" no-resize :rules="[validations.minLength(20)]">
+                        <v-textarea v-model="description" :placeholder="$t('DescribeProblem')" variant="outlined" no-resize :rules="[validations.minLength(20), validations.required]">
                         </v-textarea>
-                        <v-file-input variant="outlined" :placeholder="$t('UploadImage')">
-
-                        </v-file-input>
+                        <div class="d-flex py-2">
+                            <img v-if="imageFile" :src="previewImageSrc" class="preview-image"/>
+                            <v-file-input v-model="imageFile" variant="outlined" :placeholder="$t('UploadImage')" :rules="[validations.required]" accept="image/*" >
+                            </v-file-input>
+                        </div>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -34,14 +36,17 @@ import { useObjects } from '@/stores/objectStore.js';
 import { validations } from '@/utils/constants/validations.constants';
 import axios from 'axios';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const objectsStore = useObjects();
 const { show, object, objects } = storeToRefs(objectsStore);
 const description = ref('');
+const imageFile = ref(null);
+const previewImageSrc = computed(() => {
+    return imageFile.value ? URL.createObjectURL(imageFile.value): null;
+})
 const dialog = ref(false);
 const form = ref(null);
-const { put, response } = useFetch();
 const notifications = useNotificationStore();
 const isValid = ref()
 const { getActionWithHandling } = useHandledAsync();
@@ -64,7 +69,17 @@ async function handleSend() {
         }
 
         const response = await axios.post("http://localhost:5000/api/Issues", newIssue)
+
+        const formData = new FormData();
+        formData.append('image', imageFile.value);
+        const imageResponse = await axios.post(`http://localhost:5000/api/Images/upload`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+
         description.value = '';
+        imageFile.value = null;
         dialog.value = false;
         notifications.show("Problem successfully created!")
     })()
@@ -79,5 +94,13 @@ async function handleSend() {
     bottom: 50%;
     left: 50%;
     transform: translate(-50%, 0%);
+}
+
+.preview-image {
+    width: 25%;
+    max-height: 100%;
+    object-fit: fit;
+    border-radius: 1.5em;
+    padding: 1em;
 }
 </style>

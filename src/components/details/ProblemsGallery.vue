@@ -1,15 +1,24 @@
 <template>
-    
       <v-window v-model="current" :show-arrows="false" class="mb-2">
         <v-window-item
-          v-for="(item, i) in items"
+          v-for="(item, i) in viewItems"
           :key="i"
           :value="i"
           class="pa-5"
         >
         <v-card class="pa-4 problem-card">
-          <div class="d-flex flex-column gap-2">
+          <div class="d-flex justify-center align-center">
               {{ item.description }}
+              <v-dialog max-width="600">
+                <template #activator="{ props }">
+                  <v-btn v-bind="props" variant="plain" icon class="ml-2">
+                    <v-icon icon="mdi-image"></v-icon>
+                  </v-btn>
+                </template>
+                <v-card>
+                  <img :src="item.image" style="width: 100%; height: 100%; object-fit: contain;"></img>
+                </v-card>
+              </v-dialog>
           </div>
         </v-card>
         </v-window-item>
@@ -37,15 +46,34 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import axios from 'axios'
+import { onMounted, ref, watch, watchEffect } from 'vue'
   
-defineProps({
+const props = defineProps({
     items: {
       type: Array,
     }
   })
   
   const current = ref(0)
+  const viewItems = ref([])
+
+  watchEffect(async () => {
+    if(props.items.length > 0) {
+    const promises = props.items.map(async (item) => {
+      const response = await axios.get("http://localhost:5000/api/Images/" + item.id, {
+        responseType: 'blob'
+      })
+      item.image = URL.createObjectURL(new Blob([response.data], { type: response.headers['content-type'] }))
+      return item;
+    })
+    viewItems.value = await Promise.all(promises)
+    console.log(viewItems.value)
+    } else {
+      viewItems.value = props.items
+    }
+    
+  })
   </script>
   <style scoped lang="scss">
 .problem-card {
