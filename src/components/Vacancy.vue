@@ -33,8 +33,8 @@
             </span>
             </div>
         </div>
-        <div class="vacancy__description">
-            {{  item.description }}
+        <div class="vacancy__description" v-html="descriptionHtml">
+            
         </div>
         <div class="vacancy__actions">
             <span>{{ $t("Volunteers") + ':' + item.appliedPeople + '/' + item.neededPeople }}</span>
@@ -45,7 +45,7 @@
 <script setup>
 import { useCriticality } from '@/composables/useCriticality';
 import { getGoogleMapsHref } from '@/utils/helpers/getGoogleMapHref';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import VolounteerDialog from './details/VolounteerDialog.vue';
 
 const props = defineProps({
@@ -53,17 +53,17 @@ const props = defineProps({
 })
 
 const { criticalityMax, criticality, criticityColor } = useCriticality(computed(() => props.item.object.criticalityScore ?? 0))
-const description = ref();
+const descriptionHtml = ref();
 
-/* onMounted(() => {
+onMounted(() => {
     if(props.item.description.length) {
-        description.value.split('\n').map((paragraph) => {
+        descriptionHtml.value = props.item.description.split('\\n').map((paragraph) => {
             const p = document.createElement('p');
             p.innerText = paragraph;
-            p
-        })
+            return p.outerHTML;
+        }).join('');
     }
-}) */
+})
 </script>
 <style lang="scss">
 .vacancy {
@@ -100,7 +100,9 @@ const description = ref();
     &__description {
         grid-column: span 2;
         grid-row: 3;
-        text-indent: 1.5em;
+        & p {
+            text-indent: 1.5em;
+        }
     }
     &__actions {
         grid-column: span 2;
